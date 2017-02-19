@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.0" package="com.ajsmithsw.switchout" android:versionCode="6">
+	<uses-sdk android:minSdkVersion="15" />
+	<application android:label="switchOUT"></application>
+</manifest>
