@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="switchout.GamePage">
 	<RelativeLayout>
-		<Grid x:Name="lights" Padding="6" BackgroundColor="Red"
+		<Grid x:Name="lights" Padding="6"
 				RelativeLayout.WidthConstraint="{ConstraintExpression
 					Type=RelativeToParent,
 					Property=Width,
@@ -11,5 +11,19 @@
 					Property=Width,
 					Factor=1}" >
 		</Grid>
+		<StackLayout x:Name="labels" HorizontalOptions="Center" VerticalOptions="Center" 
+				RelativeLayout.YConstraint="{ConstraintExpression
+					Type=RelativeToView,
+					ElementName=lights,
+					Property=Height,
+					Factor=1,
+					Constant=20}" 
+				RelativeLayout.WidthConstraint="{ConstraintExpression
+					Type=RelativeToParent,
+					Property=Width,
+					Factor=1}" >
+			<Label x:Name="lblLevelNumber" HorizontalTextAlignment="Center" />
+			<Label x:Name="lblMovesMade" HorizontalTextAlignment="Center" />
+		</StackLayout>
 	</RelativeLayout>
 </ContentPage>

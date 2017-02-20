@@ -35,6 +35,7 @@
     <EmbeddedResource Include="GamePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="Puzzles.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -49,6 +50,10 @@
     </Compile>
     <Compile Include="Models\Light.cs" />
     <Compile Include="Dependencies\IFileHelper.cs" />
+    <Compile Include="Data\GameProgressDatabase.cs" />
+    <Compile Include="Models\PuzzleSolutionStats.cs" />
+    <Compile Include="Models\Puzzle.cs" />
+    <Compile Include="Models\PuzzleManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">
@@ -80,6 +85,7 @@
     <Folder Include="Models\" />
     <Folder Include="Dependencies\" />
     <Folder Include="Data\" />
+    <Folder Include="Puzzles\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />

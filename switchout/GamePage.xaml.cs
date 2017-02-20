@@ -1,24 +1,41 @@
 ﻿using System;
 using Xamarin.Forms;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace switchout
 {
 	public partial class GamePage : ContentPage
 	{
+		public int level, moves, par;
+		List<Puzzle> puzzles;
+		List<PuzzleSolutionStats> levelsComplete;
+
+
 		public GamePage()
 		{
 			InitializeComponent();
 
-			var level = new int[][] {
-				new int[] { 0, 0, 0, 0, 0 },
-				new int[] { 0, 0, 1, 0, 0 },
-				new int[] { 0, 1, 1, 1, 0 },
-				new int[] { 0, 0, 1, 0, 0 },
-				new int[] { 0, 0, 0, 0, 0 }
-			};
+			InitializeLevel();
+		}
 
-			PopulateLightGrid(level);
+		async void InitializeLevel()
+		{
+			puzzles = PuzzleManager.GetPuzzles();
+
+			levelsComplete = await App.Database.GetItemsAsync();
+
+			level = levelsComplete.Count + 1;
+			if (level > puzzles.Count)
+				level = 1;
+			
+			moves = 0;
+
+			lblLevelNumber.Text = string.Format("Level {0}", level);
+			lblMovesMade.Text = string.Format("Moves {0}", moves);
+
+			PopulateLightGrid(puzzles[levelsComplete.Count].PuzzleSequence);
+
+			// TODO - par = GetParForPuzzleSequence();
 		}
 
 		public void PopulateLightGrid(int[][] level)
@@ -34,6 +51,8 @@ namespace switchout
 
 		void LightPressed(object sender, EventArgs e)
 		{
+			lblMovesMade.Text = string.Format("Moves {0}", ++moves);
+
 			(sender as Light).Toggle();
 
 			var row = (sender as Light).position[0];
@@ -44,7 +63,15 @@ namespace switchout
 					light.Toggle();
 
 			if (CheckHasWon())
-				DisplayAlert("Congratulations", "You win!", "");
+			{
+				DisplayAlert("Congratulations", "You win!", "Next");
+
+				// Save the stats for the level
+				App.Database.SaveItemAsync(new PuzzleSolutionStats(level, 0, moves, 3));
+
+				// Generate next level
+				SetLevel(level + 1);
+			}
 		}
 
 		bool ShouldToggle(int[] position, int row, int col)
@@ -67,5 +94,36 @@ namespace switchout
 			return true;
 		}
 
+		void SetLevel(int newLevel)
+		{
+
+			if (newLevel > puzzles.Count)
+			{
+				DisplayAlert("Complete!", "You've solved all of the puzzles!", "OK");
+				newLevel = 1;
+				moves = 0;
+				// TODO - par, best, etc
+			}
+			else
+			{
+				level = newLevel;
+				moves = 0;
+
+				lblLevelNumber.Text = string.Format("Level {0}", level);
+				lblMovesMade.Text = string.Format("Moves {0}", moves);
+				// TODO - par, best etc
+			}
+
+			foreach (Light light in lights.Children)
+			{
+				var x = light.position[0];
+				var y = light.position[1];
+
+				if (puzzles[level].PuzzleSequence[x][y] == 0 && light.Illuminated())
+					light.Toggle();
+				if (puzzles[level].PuzzleSequence[x][y] == 1 && !light.Illuminated())
+					light.Toggle();
+			}
+		}
 	}
 }
